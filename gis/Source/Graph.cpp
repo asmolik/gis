@@ -16,7 +16,7 @@ Graph::Graph(const std::string& file) : begin(0), end(0), flow(0)
     std::ifstream fs(file);
     if (!fs.is_open())
     {
-        std::cout << "file" << std::endl;
+        std::cerr << "input file" << std::endl;
         return;
     }
 
