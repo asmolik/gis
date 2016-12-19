@@ -252,11 +252,9 @@ Path Graph::bfs(int max_flow)
     // Reconstruct the path from start to end
     std::vector<int> path;
     path.insert(path.begin(), end);
-    while(true)
+    int path_vertex = prev_vertex[end];
+    while(path_vertex != begin)
     {
-        int path_vertex = prev_vertex[end];
-        if(path_vertex == begin)
-            break;
         path.insert(path.begin(), path_vertex);
         path_vertex = prev_vertex[path_vertex];
     }
