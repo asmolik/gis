@@ -1,0 +1,7 @@
+env = Environment()
+env.Append(CXXFLAGS='-g -std=c++11')
+env.Object("Path.cpp")
+env.Object("Edge.cpp")
+env.Object("Graph.cpp")
+env.Object("main.cpp")
+env.Program(target = "main", source = ["Path.cpp", "Edge.cpp", "Graph.cpp", "main.cpp"])

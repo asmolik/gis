@@ -3,10 +3,12 @@
 class Edge
 {
 public:
-    // edge points to this vertex
+    // The edge points to this vertex (int is number of vertex)
     int vertex;
-    // maximum flow for this edge
+    // Maximum flow for this edge
     int capacity;
+
+    // Actual flow for this edge
     int flow;
 
 public:

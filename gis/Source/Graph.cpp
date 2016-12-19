@@ -13,7 +13,7 @@ Graph::Graph(const std::string& file) : begin(0), end(0), flow(0)
 {
     graph.push_back(std::vector<Edge>());
 
-    std::ifstream fs(file);
+    std::ifstream fs(file.c_str());
     if (!fs.is_open())
     {
         std::cerr << "input file" << std::endl;
@@ -85,7 +85,7 @@ Graph::Graph(const std::string& file) : begin(0), end(0), flow(0)
 
 Graph::~Graph() {}
 
-std::pair<std::vector<Edge>&, bool> Graph::adjacencyList(int vertex)
+std::pair<std::vector<Edge>, bool> Graph::adjacencyList(int vertex)
 {
     if (vertex < graph.size())
     {
@@ -165,7 +165,7 @@ std::ostream& operator<<(std::ostream& os, const Graph& g)
         {
             os << "(" << i << ", "
                 << e.vertex << ", "
-                << e.flow << ") ";
+                << e.capacity << ") ";
         }
         os << std::endl;
     }
@@ -173,4 +173,109 @@ std::ostream& operator<<(std::ostream& os, const Graph& g)
 
     os << std::endl;
     return os;
+}
+
+std::vector<Path> Graph::find_shortest_paths()
+{
+    // Result paths
+    std::vector<Path> paths;
+
+    // Counter of remaining flow
+    int remain_flow = flow;
+    while(remain_flow>0)
+    {
+        try
+        {
+            // Find shortest path at each step
+            Path shortest_path = bfs(remain_flow);
+            remain_flow -= shortest_path.flow;
+            subtract(shortest_path);
+            paths.push_back(shortest_path);
+        }
+        catch(...)
+        {
+            // Flow cannot be sent
+            paths.clear();
+            return paths;
+        }
+    }
+
+    return paths;
+}
+
+Path Graph::bfs(int max_flow)
+{
+    // Queue of vertices for bread-first search
+    std::queue<int> _queue;
+    // Vector of preceding vertices for path finding
+    std::vector<int> prev_vertex(graph.size(), -1);
+    // Vector of logical values, if vertix has been visited
+    std::vector<bool> visited(graph.size(), false);
+
+    // Add starting vertix to queue
+    _queue.push(begin);
+    visited[begin] = true;
+
+    // Flag, if path is completed
+    bool end_found = false;
+
+    while(!_queue.empty())
+    {
+        int vertex = _queue.front();
+        _queue.pop();
+
+        // Break if path is completed
+        if(vertex==end)
+        {
+            end_found = true;
+            break;
+        }
+        // Bread search
+        for(Edge e : adjacencyList(vertex).first)
+        {
+            if(!visited[e.vertex])
+            {
+                visited[e.vertex] = true;
+                _queue.push(e.vertex);
+                prev_vertex[e.vertex] = vertex;
+
+            }
+        }
+    }
+
+    // Throw exception if path is not found
+    if(!end_found)
+    {
+        throw "Path not found";
+    }
+
+    // Reconstruct the path from start to end
+    std::vector<int> path;
+    path.insert(path.begin(), end);
+    while(true)
+    {
+        int path_vertex = prev_vertex[end];
+        if(path_vertex == begin)
+            break;
+        path.insert(path.begin(), path_vertex);
+        path_vertex = prev_vertex[path_vertex];
+    }
+
+    Path shortest_path = Path(begin);
+    int temp_vertex = begin;
+    for(int path_vertex : path)
+    {
+        for(Edge e : adjacencyList(temp_vertex).first)
+        {
+            if(e.vertex==path_vertex)
+            {
+                shortest_path.addEdge(e);
+                temp_vertex = e.vertex;
+            }           
+        }
+    }
+
+    // Set max flow for a path
+    shortest_path.setMaxFlow(std::min(max_flow,shortest_path.maxFlow()));
+    return shortest_path;
 }

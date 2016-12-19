@@ -8,22 +8,28 @@
 
 void lol()
 {
-    Edge e1(1, 2), e2(2, 2), e3(3, 4);
+    Edge e1(1, 2), e2(2, 2), e3(3, 4), e4(2, 3);
     Graph g;
+    g.flow = 4;
+    g.begin = 0;
+    g.end = 3;
     g.addEdge(0, e1);
     g.addEdge(1, e2);
     g.addEdge(2, e3);
+    g.addEdge(0, e4);
 
     Path p(0);
     p.addEdge(e1);
     p.addEdge(e2);
     p.addEdge(e3);
+    std::vector<Path> paths = g.find_shortest_paths();
 
-    std::cout << p.maxFlow() << std::endl;
-
-    p.setMaxFlow(1);
-    std::cout << p;
-    g.subtract(p);
+    std::cout<<"Wynik: "<<std::endl;
+    for(Path p : paths)
+    {
+        std::cout<<p<<std::endl;
+    }
+    std::cout<<"Koniec wyniku."<<std::endl;
 }
 
 void printOutput(const std::string& fileName, const std::vector<Path>& paths)
