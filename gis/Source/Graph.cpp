@@ -110,6 +110,13 @@ bool Graph::addEdge(int v, const Edge& e)
     if (std::find(adjList.begin(), adjList.end(), e) == adjList.end())
     {
         adjList.push_back(e);
+        if (graph.size() < e.vertex + 1)
+        {
+            for (int i = graph.size(); i < e.vertex + 1; ++i)
+            {
+                graph.push_back(std::vector<Edge>());
+            }
+        }
         return true;
     }
     else
@@ -208,9 +215,9 @@ Path Graph::bfs(int max_flow)
     // Queue of vertices for bread-first search
     std::queue<int> _queue;
     // Vector of preceding vertices for path finding
-    std::vector<int> prev_vertex(graph.size() + 1, -1);
+    std::vector<int> prev_vertex(graph.size(), -1);
     // Vector of logical values, if vertix has been visited
-    std::vector<bool> visited(graph.size() + 1, false);
+    std::vector<bool> visited(graph.size(), false);
 
     // Add starting vertix to queue
     _queue.push(begin);
