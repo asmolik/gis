@@ -47,6 +47,6 @@ std::ostream& operator<<(std::ostream& os, const Path& p)
             << e.flow << ")";
         currentVertex = e.vertex;
     }
-    
+    os << std::endl;
     return os;
 }

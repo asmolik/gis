@@ -27,7 +27,7 @@ void lol()
     std::cout<<"Wynik: "<<std::endl;
     for(Path p : paths)
     {
-        std::cout<<p<<std::endl;
+        std::cout << p;
     }
     std::cout<<"Koniec wyniku."<<std::endl;
 }
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
     Graph graph(input);
     // liczenie
     std::vector<Path> paths;
-
+    printOutput(output, graph.find_shortest_paths());
 
 
     Edge e1(1, 2), e2(2, 2), e3(3, 4);
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
     p.addEdge(e3);
     p.setMaxFlow(1);
     paths.push_back(p);
-    printOutput(output, paths);
+    //printOutput(output, paths);
 
     lol();
 
