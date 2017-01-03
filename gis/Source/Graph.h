@@ -15,13 +15,15 @@ class Graph
 {
     friend std::ostream& operator<<(std::ostream& out, const Graph& g);
 
-private:
+public://private:
     // maps vertices to edges
     std::vector<std::vector<Edge> > graph;
 
     // Breadth first search for shoretest path
-    Path bfs(int max_flow);
+    Path bfs_shortest(int max_flow);
 
+    // Breadth first search for longest path
+    Path bfs_longest(int max_flow);
 
 public:
     // Start and finish of a flow
@@ -46,6 +48,7 @@ public:
 
     // Find shortest paths for given constraints
     std::vector<Path> find_shortest_paths();
+    std::vector<Path> find_shortest_paths_2();
 };
 
 std::ostream& operator<<(std::ostream& os, const Graph& obj);
